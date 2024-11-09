@@ -30,8 +30,12 @@ export type Subreq = {
 };
 
 export type Requirement = {
+  type: "major_requirement"
   title: string;
   subreqs: Subreq[];
+} | {
+  type: "nupath_requirement"
+  nupath: NUPath;
 }
 
 export type ParseResult = {

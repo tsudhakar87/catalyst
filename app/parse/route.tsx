@@ -2,7 +2,10 @@ import { readFileSync } from "fs"; // file system library that comes with node.j
 import * as cheerio from "cheerio"; // entire cheerio library for parsing
 import diffCourses from "../lib/diffCourses";
 import { CSRequirements, HUCCRequiremenets } from "../lib/cs-requirements";
-import { getNUPathCourse } from "../lib/getNUPathCourse";
+import {
+  getAllNUPathRequirements,
+  getNUPathCourse,
+} from "../lib/getNUPathCourse";
 import { ParseResult, Requirement } from "../types";
 
 // need to make a list for completed courses and courses in progress
@@ -62,6 +65,7 @@ export async function GET(request: Request) {
 
   let requirements: Requirement[] = [
     {
+      type: "major_requirement",
       title: "COMPUTER SCIENCE MAJOR REQUIREMENTS",
       subreqs: majorReqDiff,
     },
@@ -79,21 +83,22 @@ export async function GET(request: Request) {
 
     const diff = diffCourses(concentrationTakenCourses, HUCCRequiremenets);
     requirements.push({
+      type: "major_requirement",
       title: "HUCC REQUIREMENTS",
       subreqs: diff,
     });
   }
 
-  const nd = getNUPathCourse($, "NATURAL and DESIGNED WORLD (ND)");
+  const NUPathRequirements = getAllNUPathRequirements($);
 
   const result: ParseResult = {
     programCode,
     title,
     name,
-    requirements,
+    requirements: [...requirements, ...NUPathRequirements],
   };
 
-  return new Response(JSON.stringify(result), { status: 200 });
+  return new Response(JSON.stringify(result, undefined, 2), { status: 200 });
 }
 
 export const getTakenCourses = ($: cheerio.CheerioAPI, htmlText: string) => {
@@ -103,7 +108,7 @@ export const getTakenCourses = ($: cheerio.CheerioAPI, htmlText: string) => {
   subreqBodies.each((i, el) => {
     const title = $(el).find("span").first().text().trim().split("\n")[0]; // span is the first child of subreqBody
     if (!title) return;
-    console.log("+ SUBREQ: ", title);
+    // console.log("+ SUBREQ: ", title);
     const classes = $(el).find("tr.takenCourse").toArray(); // class class // table row
     classes.forEach((c) => {
       const course = $(c).find("td.course").text().trim().replace(" ", ""); // td is the child of takenCourse
@@ -112,7 +117,7 @@ export const getTakenCourses = ($: cheerio.CheerioAPI, htmlText: string) => {
         $(c).find("td.description").text().trim().replaceAll("\n", "")
       );
 
-      console.log("| \tCOURSE: ", course, " ", description);
+      // console.log("| \tCOURSE: ", course, " ", description);
 
       if (course.includes(" ")) {
         takenCourses.push(course);
