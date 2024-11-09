@@ -20,7 +20,6 @@ export function getNUPathCourse($: cheerio.CheerioAPI, nupath: NUPath, nupathFul
       if (courses && courses.length > 0) {
         continue;
       }
-      console.log("Found courses for", nupathFullName, courses);
       return {
         type: "nupath_requirement",
         nupath,

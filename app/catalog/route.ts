@@ -1,9 +1,9 @@
 import { getCSCatalog } from "../lib/getCSCatalog";
 
 export async function GET(request: Request) {
-  getCSCatalog();
+  const courses = await getCSCatalog();
 
-  return new Response("Hello world!", {
+  return new Response(JSON.stringify(courses), {
     status: 200
   })
 }

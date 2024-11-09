@@ -1,4 +1,5 @@
-import { Subreq } from "../types";
+import { Subreq, SubreqCourse } from "../types";
+import { data } from "./catalogCSData";
 
 // check if one course from the same department is a greater number than the other
 function isCourseGreater(course1: string, course2: string) {
@@ -26,25 +27,30 @@ export default function diffCourses(taken: string[], requirements: Subreq[]) {
 
   const invalidateCourse = (courseId: string) => {
     // remove this course from takenCourses
-    takenCourses = takenCourses.filter(course => course != courseId);
+    const object = data.find(course => course.id == courseId);
+    takenCourses = takenCourses.filter(course => course != courseId && !object?.coReqs.includes(course));
   }
 
   // loop through each subreq category
   for (const category of requirements) {
     // loop through each course in the category
-    // console.log(`Checking category ${category.title} (${category.courses.length})`);
+    // console.log(`Checking category ${category.title} (${category.courses.length}, ${category.numRequired})`);
     let numRequired = category.numRequired;
     const dec = () => numRequired = Math.max(0, numRequired - 1);
-    let courses = [];
+    let courses: SubreqCourse[] = [];
     for (const course of category.courses) {
+      console.log(takenCourses, numRequired, category.courses)
       // check if the course is in the taken courses
       if (course.type == "course") {
-        if (!takenCourses.includes(course.courseId) && !course.or.some(c => takenCourses.includes(c))) {
+        const hasTakenCourse = takenCourses.includes(course.courseId) || course.or.some(c => takenCourses.includes(c));
+        if (!hasTakenCourse) {
           courses.push(course);
         } else {
-          // console.log(`Used course ${course.courseId} to satisfy ${category.title}`);
+          const used = takenCourses.includes(course.courseId) ? course.courseId : course.or.find(c => takenCourses.includes(c));
+          if (!used) continue;
+          // console.log(`Used course ${used} to satisfy ${category.title}`);
           dec();
-          invalidateCourse(course.courseId);
+          invalidateCourse(used);
           if (numRequired == 0) {
             courses = [];
             break;
@@ -53,14 +59,11 @@ export default function diffCourses(taken: string[], requirements: Subreq[]) {
       }
       else if (course.type == "courseRange") {
         // check if the course is in the taken courses
+        courses = category.courses;
         for (const takenCourse of takenCourses) {
           if (isCourseGreater(takenCourse, course.aboveCourseId)) {
-            // console.log(`Used course ${takenCourse} to satisfy ${category.title}`);
             dec();
             invalidateCourse(takenCourse);
-          }
-          else {
-            courses.push(course);
           }
         }
         if (numRequired == 0) {
@@ -69,6 +72,7 @@ export default function diffCourses(taken: string[], requirements: Subreq[]) {
         }
       }
     }
+    console.log(`Category ${category.title} has ${numRequired} courses left`);
     newRequirements.push({ title: category.title, courses: courses, numRequired: numRequired });
   }
 

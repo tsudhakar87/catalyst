@@ -108,7 +108,7 @@ export const getTakenCourses = ($: cheerio.CheerioAPI, htmlText: string) => {
   subreqBodies.each((i, el) => {
     const title = $(el).find("span").first().text().trim().split("\n")[0]; // span is the first child of subreqBody
     if (!title) return;
-    // console.log("+ SUBREQ: ", title);
+    console.log("+ SUBREQ: ", title);
     const classes = $(el).find("tr.takenCourse").toArray(); // class class // table row
     classes.forEach((c) => {
       const course = $(c).find("td.course").text().trim().replace(" ", ""); // td is the child of takenCourse
@@ -117,7 +117,7 @@ export const getTakenCourses = ($: cheerio.CheerioAPI, htmlText: string) => {
         $(c).find("td.description").text().trim().replaceAll("\n", "")
       );
 
-      // console.log("| \tCOURSE: ", course, " ", description);
+      console.log("| \tCOURSE: ", course, " ", description);
 
       if (course.includes(" ")) {
         takenCourses.push(course);
