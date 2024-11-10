@@ -3,7 +3,7 @@ import { Subreq } from "../types";
 export const CSRequirements: Subreq[] = [
   {
     title: "Computer Science Overview",
-    courses: [
+    coursesToTake: [
       {
         type: "course",
         courseId: "CS 1200",
@@ -17,11 +17,12 @@ export const CSRequirements: Subreq[] = [
         and: [],
       }
     ],
+    coursesTaken: [],
     numRequired: 2,
   },
   {
     title: "Computer Science Fundamental Requirements",
-    courses: [
+    coursesToTake: [
       {
         type: "course",
         courseId: "CS 1800",
@@ -41,11 +42,12 @@ export const CSRequirements: Subreq[] = [
         and: ["CS 2511"]
       },
     ],
+    coursesTaken: [],
     numRequired: 3,
   },
   {
     title: "Computer Science Required Courses",
-    courses: [
+    coursesToTake: [
       {
         type: "course",
         courseId: "CS 3000",
@@ -83,11 +85,12 @@ export const CSRequirements: Subreq[] = [
         and: []
       }
     ],
+    coursesTaken: [],
     numRequired: 6,
   },
   {
     title: "Security Required Course",
-    courses: [
+    coursesToTake: [
       {
         type: "course",
         courseId: "CY 2550",
@@ -95,11 +98,12 @@ export const CSRequirements: Subreq[] = [
         and: []
       }
     ],
+    coursesTaken: [],
     numRequired: 1
   },
   {
     title: "Presentation Requirement",
-    courses: [
+    coursesToTake: [
       {
         type: "course",
         courseId: "COMM 1112",
@@ -114,11 +118,12 @@ export const CSRequirements: Subreq[] = [
       { type: "course", courseId: "THTR 1180", or: [], and: [] },
       { type: "course", courseId: "THTR 2345", or: [], and: [] }
     ],
+    coursesTaken: [],
     numRequired: 1
   },
   {
     title: "Khoury Elective Courses",
-    courses: [
+    coursesToTake: [
       {
         type: "courseRange",
         aboveCourseId: "CS 2500"
@@ -136,6 +141,7 @@ export const CSRequirements: Subreq[] = [
         aboveCourseId: "IS 2000"
       }
     ],
+    coursesTaken: [],
     numRequired: 2,
   }
 ]
@@ -143,7 +149,7 @@ export const CSRequirements: Subreq[] = [
 export const HUCCRequiremenets: Subreq[] = [
   {
     title: "Required",
-    courses: [
+    coursesToTake: [
       {
         type: "course",
         courseId: "IS 4300",
@@ -157,11 +163,12 @@ export const HUCCRequiremenets: Subreq[] = [
         and: []
       }
     ],
+    coursesTaken: [],
     numRequired: 2,
   },
   {
     title: "Optional",
-    courses: [
+    coursesToTake: [
       {
         type: "course",
         courseId: "CS 4120",
@@ -193,6 +200,7 @@ export const HUCCRequiremenets: Subreq[] = [
         and: [],
       }
     ],
+    coursesTaken: [],
     numRequired: 2,
   }
 ]

@@ -19,6 +19,14 @@ export default function Home() {
       >
         /catalog
       </button>
+      <button
+        onClick={() => {
+          fetch("/schedule");
+        }}
+        className="px-2 py-1 bg-gray-600 rounded-md"
+      >
+        /schedule
+      </button>
     </div>
   );
 }

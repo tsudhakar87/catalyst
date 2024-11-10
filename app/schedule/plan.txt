@@ -1,0 +1,17 @@
+we have what they took and what they need to taken
+Steps:
+- Ask user their current semester and graduating semester
+    - Drop down with 
+- Ask user for co-op cycle (Fall or Spring)
+- Make sure that all preqs of courses are put down first 
+- Make sure that all coreqs are accounted for each class
+- Keep a max of 19 credits for reg semester and 10 credits for summer semester
+
+
+
+if we wanna be extra extra, we can ask them if they want a specific class 
+in a specific semester and build a schedule around those preferences 
+(probably won't be able to do this) 
+
+use past TRACE evals to determine the likelihood of a course being offered in 
+a certain semester, and rearrange courses to fit that as well

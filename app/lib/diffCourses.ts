@@ -21,6 +21,7 @@ function isCourseGreater(course1: string, course2: string) {
 }
 
 export default function diffCourses(taken: string[], requirements: Subreq[]) {
+  let isSatisfied = false;
   // initialize a variable to store the courses that are still needed
   const newRequirements: Subreq[] = [];
   let takenCourses = taken;
@@ -34,12 +35,13 @@ export default function diffCourses(taken: string[], requirements: Subreq[]) {
   // loop through each subreq category
   for (const category of requirements) {
     // loop through each course in the category
-    // console.log(`Checking category ${category.title} (${category.courses.length}, ${category.numRequired})`);
+    // console.log(`Checking category ${category.title} (${category.coursesToTake.length}, ${category.numRequired})`);
     let numRequired = category.numRequired;
     const dec = () => numRequired = Math.max(0, numRequired - 1);
     let courses: SubreqCourse[] = [];
-    for (const course of category.courses) {
-      console.log(takenCourses, numRequired, category.courses)
+    let trackedCourses: string[] = [];
+    for (const course of category.coursesToTake) {
+      console.log(takenCourses, numRequired, category.coursesToTake)
       // check if the course is in the taken courses
       if (course.type == "course") {
         const hasTakenCourse = takenCourses.includes(course.courseId) || course.or.some(c => takenCourses.includes(c));
@@ -51,7 +53,9 @@ export default function diffCourses(taken: string[], requirements: Subreq[]) {
           // console.log(`Used course ${used} to satisfy ${category.title}`);
           dec();
           invalidateCourse(used);
+          trackedCourses.push(used);
           if (numRequired == 0) {
+            isSatisfied = true;
             courses = [];
             break;
           }
@@ -59,21 +63,28 @@ export default function diffCourses(taken: string[], requirements: Subreq[]) {
       }
       else if (course.type == "courseRange") {
         // check if the course is in the taken courses
-        courses = category.courses;
+        courses = category.coursesToTake;
         for (const takenCourse of takenCourses) {
           if (isCourseGreater(takenCourse, course.aboveCourseId)) {
             dec();
             invalidateCourse(takenCourse);
+            trackedCourses.push(takenCourse);
           }
         }
         if (numRequired == 0) {
+          isSatisfied = true;
           courses = [];
           break;
         }
       }
     }
     console.log(`Category ${category.title} has ${numRequired} courses left`);
-    newRequirements.push({ title: category.title, courses: courses, numRequired: numRequired });
+    newRequirements.push({
+      title: category.title, 
+      coursesToTake: courses,
+      coursesTaken: trackedCourses,
+      numRequired: numRequired,
+    });
   }
 
   return newRequirements;

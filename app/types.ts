@@ -6,6 +6,7 @@ export type Course = {
   preReqs: string[];
   coReqs: string[];
   nupath: NUPath[];
+  hours: number;
 };
 
 // coming from program requirements
@@ -25,7 +26,8 @@ export type SubreqCourse =
 // coming from program requirements
 export type Subreq = {
   title: string;
-  courses: SubreqCourse[];
+  coursesToTake: SubreqCourse[];
+  coursesTaken: string[];
   numRequired: number;
 };
 
@@ -36,6 +38,10 @@ export type Requirement = {
 } | {
   type: "nupath_requirement"
   nupath: NUPath;
+} | { // a satisfied nupath requirement with the path that requires it
+  type: "satisfied_nupath_requirement"
+  nupath: NUPath;
+  courseId: string;
 }
 
 export type ParseResult = {
@@ -45,6 +51,13 @@ export type ParseResult = {
   requirements: Requirement[];
 }
 
+export type Semester = {
+  season: "Spring" | "Fall" | "Summer 1" | "Summer 2",
+  year: number
+  courses: string[];
+}
+
+export type Cycle = "Spring" | "Fall";
 
 export const NUPaths = ["ND", "EI", "IC", "FQ", "SI", "AD", "DD", "ER", "WF", "WD", "WI", "EX", "CE"];
 export type NUPath = "ND" | "EI" | "IC" | "FQ" | "SI" | "AD" | "DD" | "ER" | "WF" |

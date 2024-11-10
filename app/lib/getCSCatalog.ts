@@ -23,11 +23,19 @@ export async function getCSCatalog() {
       const preReqs: Set<string> = new Set();
       const coReqs: Set<string> = new Set();
       const nupathReqs: Set<NUPath> = new Set();
+
+      let hours: number = 0;
       if (description.includes("Advanced Writing")) {
         nupathReqs.add("WD")
       }
       if (description.includes("First Year Writing")) {
         nupathReqs.add("WF")
+      }
+
+      const strHours = $(element).text().match(/\(([^)]+)\)/);
+      
+      if (strHours) {
+        hours = parseInt(strHours[1]);
       }
 
       // TODO: abstract this later
@@ -65,7 +73,8 @@ export async function getCSCatalog() {
         description: description,
         preReqs: Array.from(preReqs),
         coReqs: Array.from(coReqs),
-        nupath: Array.from(nupathReqs)
+        nupath: Array.from(nupathReqs),
+        hours: hours
       };
 
       courses.push(course);
@@ -73,4 +82,45 @@ export async function getCSCatalog() {
 
     return courses;
   }
+}
+
+export async function findCSCourse(courseId: string): Promise<Course | null> {
+  const catalog = await getCSCatalog();
+
+  if (!catalog) {
+    return null;
+  }
+
+  let foundCourse: Course | null = null;
+
+  catalog.forEach((course, i) => {
+    // if (i != 40) return;
+    const curCourseId = course.id.trim().toLowerCase();
+    const courseID = courseId.trim().toLowerCase();
+
+    for (let i = 0; i < courseID.length; i ++) {
+      if (curCourseId.charAt(i) != courseID.charAt(i) && courseID.charAt(i) != ' ') {
+        return;
+      }
+    }
+
+    foundCourse = course;  // Set the found course
+  });
+
+  return foundCourse ?? null;  // Return the found course or null if not found
+}
+
+
+export async function findCSCoursesForNUPath(nupath: string) {
+  // initialize a list of courses to be returned
+  //const courses[] = [];
+  // check if it's null
+  // if (courses == null) {
+  //   return null;
+  // }
+  // for each course in the catalog, go through the list of its nupaths (forEach?)
+  
+  // if that list of nupaths contains the nupath, then add that course to the initial list 
+  // (forEach?, then contains or something?)
+  // return list
 }

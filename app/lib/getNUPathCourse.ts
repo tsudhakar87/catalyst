@@ -18,7 +18,11 @@ export function getNUPathCourse($: cheerio.CheerioAPI, nupath: NUPath, nupathFul
       if (!reqBody) return null; // html might return null, so return early to avoid issues
       const courses = getTakenCourses($, reqBody);
       if (courses && courses.length > 0) {
-        continue;
+        return {
+          type: "satisfied_nupath_requirement",
+          nupath,
+          courseId: courses[0],
+        }
       }
       return {
         type: "nupath_requirement",
@@ -41,7 +45,7 @@ export function getAllNUPathRequirements($: cheerio.CheerioAPI) {
   return requirements;
 }
 
-const NUPathFullNames: Record<NUPath, string> = {
+export const NUPathFullNames: Record<NUPath, string> = {
   "ND": "NATURAL and DESIGNED World (ND)",
   "EI": "CREATIVE EXPRESSION/INNOVATION (EI)",
   "IC": "INTERPRETING CULTURE (IC)",

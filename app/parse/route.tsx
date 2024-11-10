@@ -16,11 +16,15 @@ import { ParseResult, Requirement } from "../types";
 // use their number of remaining semesters to then distribute out the classes they need to take
 
 // get method for parsing through the html file
-export async function GET(request: Request) {
-  const htmlText = readFileSync(
-    "/Users/neesh/catalyst/app/parse/audit.html",
-    "utf-8"
-  ); // reads file at given path
+export async function POST(req: Request) {
+  const formData = await req.formData();
+  const file = formData.get("file");
+  if (!file) {
+    return new Response("No file", { status: 400})
+  }
+  const arrayBuffer = await (file as File).arrayBuffer();
+  const buffer = Buffer.from(arrayBuffer);
+  const htmlText = buffer.toString('utf-8');
 
   // initialize an error variable to be thrown if any variables are null,
   // and do this instead of an assert function to let the rest of the
@@ -66,7 +70,7 @@ export async function GET(request: Request) {
   let requirements: Requirement[] = [
     {
       type: "major_requirement",
-      title: "COMPUTER SCIENCE MAJOR REQUIREMENTS",
+      title: "Computer Science Major Requirements",
       subreqs: majorReqDiff,
     },
   ];
@@ -84,7 +88,7 @@ export async function GET(request: Request) {
     const diff = diffCourses(concentrationTakenCourses, HUCCRequiremenets);
     requirements.push({
       type: "major_requirement",
-      title: "HUCC REQUIREMENTS",
+      title: "Human-Centered Computing Requirements",
       subreqs: diff,
     });
   }
@@ -98,7 +102,7 @@ export async function GET(request: Request) {
     requirements: [...requirements, ...NUPathRequirements],
   };
 
-  return new Response(JSON.stringify(result, undefined, 2), { status: 200 });
+  return new Response(JSON.stringify(result), { status: 200 });
 }
 
 export const getTakenCourses = ($: cheerio.CheerioAPI, htmlText: string) => {
