@@ -198,7 +198,7 @@ export function SubreqCourseChip({
       {course.type == "course" ? (
         <div
           key="course-chip"
-          className="flex items-center bg-zinc-900 border-t border-t-zinc-600 border-b border-b-zinc-600 rounded-md"
+          className="flex items-center bg-black/20 shadow-inner border-t border-t-zinc-700/60 border-b border-b-zinc-700/60 rounded-md"
         >
           {courseChip ? (
             courseChip(course.courseId)
@@ -225,7 +225,7 @@ export function SubreqCourseChip({
           ) : (
             <div
               key="course-range-chip"
-              className="px-2 py-0.5 w-fit rounded-md bg-gradient-to-b from-zinc-800 to-zinc-900 border border-zinc-600"
+              className="px-2 py-0.5 w-fit rounded-md bg-gradient-to-b from-zinc-800 to-zinc-900 border border-zinc-700/60"
             >
               <p className="text-zinc-500 font-mono font-semibold uppercase text-sm inline">
                 {course.aboveCourseId.split(" ")[0]}
@@ -251,7 +251,7 @@ export function CourseChip({
 }) {
   return (
     <motion.div
-      className="px-2 py-0.5 w-fit rounded-md bg-gradient-to-b from-zinc-800 to-zinc-900 border border-zinc-600 z-10"
+      className="px-2 py-0.5 w-fit rounded-md bg-gradient-to-b from-zinc-800 to-zinc-900 border border-zinc-700/60 z-10"
       key={index}
       variants={{
         initial: { opacity: 0, y: 10, filter: "blur(4px)" },

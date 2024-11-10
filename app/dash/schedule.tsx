@@ -343,7 +343,7 @@ const DraggableCourseChip = ({
         setCurrentCourse("");
       }}
     >
-      <div className="px-2 py-0.5 h-8 w-fit rounded-md bg-gradient-to-b from-zinc-800 to-zinc-900 border border-zinc-600 z-10">
+      <div className="px-2 py-0.5 h-8 w-fit rounded-md bg-gradient-to-b from-zinc-800 to-zinc-900 border border-zinc-700/60 z-10">
         <p className="text-zinc-500 font-mono font-semibold uppercase text-sm inline mr-1">
           {courseId.split(" ")[0]}
         </p>
@@ -376,7 +376,7 @@ const DraggableCourseRangeChip = ({
     >
       <div
         key="course-chip"
-        className="px-2 py-0.5 h-8 rounded-md bg-gradient-to-b from-zinc-800 to-zinc-900 border border-zinc-600 w-fit"
+        className="px-2 py-0.5 h-8 rounded-md bg-gradient-to-b from-zinc-800 to-zinc-900 border border-zinc-700/60 w-fit"
       >
         <p className="text-zinc-500 font-mono font-semibold uppercase text-sm inline">
           {courseId.split(" ")[0]}
