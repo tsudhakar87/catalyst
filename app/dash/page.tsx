@@ -22,11 +22,9 @@ export default function Dashboard() {
     );
   }
 
-  const requirements = parseResults.requirements;
-
   return (
     <>
-      <div className="flex gap-6 border-b-4 px-8 py-4 items-center">
+      <div className="flex gap-4 border-b-4 px-8 py-4 items-center">
         <Link
           className="text-2xl font-semibold mr-8 italic text-violet-400"
           href="/dash"

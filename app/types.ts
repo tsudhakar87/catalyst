@@ -35,13 +35,15 @@ export type Requirement = {
   type: "major_requirement"
   title: string;
   subreqs: Subreq[];
-} | {
-  type: "nupath_requirement"
-  nupath: NUPath;
-} | { // a satisfied nupath requirement with the path that requires it
+} | NUPathRequirement | { // a satisfied nupath requirement with the path that requires it
   type: "satisfied_nupath_requirement"
   nupath: NUPath;
   courseId: string;
+}
+
+export type NUPathRequirement = {
+  type: "nupath_requirement";
+  nupath: NUPath;
 }
 
 export type ParseResult = {
