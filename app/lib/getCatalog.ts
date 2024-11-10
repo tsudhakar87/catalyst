@@ -3,19 +3,29 @@ import { NUPath, } from "../types";
 import { convertToNUPath } from "../types";
 import { readFileSync } from "fs"; // file system library that comes with node.js
 import * as cheerio from "cheerio"; // entire cheerio library for parsing
+import stringifyObj from "./printObj";
 
 
-export async function getCSCatalog() {
-
-
-  const $ = await cheerio.fromURL("https://catalog.northeastern.edu/undergraduate/computer-information-science/computer-science");
+export async function getCatalog(major: string): Promise<Course[] | null> {
+  const majorsToURL = {
+    CS: "https://catalog.northeastern.edu/undergraduate/computer-information-science/computer-science",
+    IS: "https://catalog.northeastern.edu/course-descriptions/is/",
+    DS: "https://catalog.northeastern.edu/undergraduate/computer-information-science/data-science",
+    ENG: "https://catalog.northeastern.edu/course-descriptions/engw/",
+    THTR: "https://catalog.northeastern.edu/course-descriptions/thtr/"
+  }
+  const url = majorsToURL[major.toUpperCase() as keyof typeof majorsToURL];
+  if (!url) {
+    return null;
+  }
+  const $ = await cheerio.fromURL(url);
   const courses: Course[] = [];
 
   const requirementsContainer = $("#content-container").html();
   if (requirementsContainer) {
     const courseDescriptions = $(requirementsContainer).find(".courseblock");
     courseDescriptions.each((index, element) => {
-      const id = $(element).text().trim().substring(0, 7);
+      const id = $(element).text().trim().substring(0, 7).replace(/\u00A0/g, ' ');;
       const descriptionString = $(element).text().split(".  (")[0];
       const description = descriptionString.substring(11, descriptionString.length);
       const otherReqsList = $(element).find(".courseblockextra");
@@ -82,10 +92,14 @@ export async function getCSCatalog() {
 
     return courses;
   }
+  return null;
 }
 
-export async function findCSCourse(courseId: string): Promise<Course | null> {
-  const catalog = await getCSCatalog();
+// find a course in the catalog by its id
+export function findCourse(catalog: Course[], courseId: string): Course | null {
+  const major = courseId.replace(/\u00A0/g, ' ').split(" ")[0];
+  const id = courseId.replace(/\u00A0/g, ' ').split(" ")[1];
+  // console.log("Finding course " + id + " for major " + major);
 
   if (!catalog) {
     return null;
@@ -94,33 +108,25 @@ export async function findCSCourse(courseId: string): Promise<Course | null> {
   let foundCourse: Course | null = null;
 
   catalog.forEach((course, i) => {
-    // if (i != 40) return;
-    const curCourseId = course.id.trim().toLowerCase();
-    const courseID = courseId.trim().toLowerCase();
-
-    for (let i = 0; i < courseID.length; i++) {
-      if (curCourseId.charAt(i) != courseID.charAt(i) && courseID.charAt(i) != ' ') {
-        return;
-      }
+    if (foundCourse) {
+      return;
     }
+    const curCourseId = course.id.trim().toLowerCase().replace(/\u00A0/g, ' ');;
+    const courseID = id.trim().toLowerCase();
 
-    foundCourse = course;  // Set the found course
+    if (curCourseId.includes(courseID)) {
+      foundCourse = course;
+      return;
+    }
   });
 
   return foundCourse ?? null;  // Return the found course or null if not found
 }
 
 
-export async function findCSCoursesForNUPath(nupath: string) {
-  // initialize a list of courses to be returned
-  //const courses[] = [];
-  // check if it's null
-  // if (courses == null) {
-  //   return null;
-  // }
-  // for each course in the catalog, go through the list of its nupaths (forEach?)
-
-  // if that list of nupaths contains the nupath, then add that course to the initial list 
-  // (forEach?, then contains or something?)
-  // return list
+function printRawBytes(str: string) {
+  for (let i = 0; i < str.length; i++) {
+    const code = str.charCodeAt(i);
+    console.log(`Character: '${str[i]}', Code: ${code} (Hex: ${code.toString(16)})`);
+  }
 }
